@@ -1,6 +1,10 @@
 from sqlalchemy import Column, Integer, String, Numeric
 from database import Base
+<<<<<<< HEAD
 
+=======
+# from dto.menu_dto import MenuItemCreate, MenuItemOut
+>>>>>>> 6af66b20026bb73d327953f16f3dc7505b55a47b
 class MenuItem(Base):
     __tablename__ = "menu_items"
 

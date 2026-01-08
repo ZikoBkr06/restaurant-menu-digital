@@ -9,6 +9,15 @@ class EmployeeBase(BaseModel):
 class EmployeeIn(EmployeeBase):
     pass
 
+<<<<<<< HEAD
+=======
+class EmployeeUpdate(BaseModel):
+    full_name: str | None = None
+    role: str | None = None
+    phone: str | None = None
+    email: str | None = None
+
+>>>>>>> 6af66b20026bb73d327953f16f3dc7505b55a47b
 class EmployeeOut(EmployeeBase):
     id: int
     created_at: str
