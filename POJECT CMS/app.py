@@ -4,7 +4,7 @@ from controllers.menu_router import menu_router
 from controllers.employee_router import employee_router
 
 Base.metadata.create_all(bind=engine)
-
+# Initialize FastAPI app
 app = FastAPI()
 
 app.include_router(menu_router)
