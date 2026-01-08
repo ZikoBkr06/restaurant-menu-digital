@@ -9,6 +9,12 @@ class EmployeeBase(BaseModel):
 class EmployeeIn(EmployeeBase):
     pass
 
+class EmployeeUpdate(BaseModel):
+    full_name: str | None = None
+    role: str | None = None
+    phone: str | None = None
+    email: str | None = None
+
 class EmployeeOut(EmployeeBase):
     id: int
     created_at: str
