@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from models.menu import MenuItem
-from dto.menu_dto import MenuItemCreate
+from dto.menu_dto import MenuItemCreate, MenuUpdateDTO
 # from controllers.menu_router import MenuItemOut
 class MenuService:
 
@@ -17,6 +17,17 @@ class MenuService:
         self.db.refresh(new_item)
         return new_item
 
+    def update_item(self, item_id: int, item_data: MenuUpdateDTO):
+        item = self.db.query(MenuItem).filter(MenuItem.id == item_id).first()
+        if item:
+            update_data = item_data.dict(exclude_unset=True)
+            for key, value in update_data.items():
+                setattr(item, key, value)
+            self.db.commit()
+            self.db.refresh(item)
+            return item
+        return None
+
     def delete_item(self, item_id: int):
         item = self.db.query(MenuItem).filter(MenuItem.id == item_id).first()
         if item:
@@ -24,3 +35,6 @@ class MenuService:
             self.db.commit()
             return True
         return False
+    
+    
+    
