@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-
+# from models.menu_model import MenuItem
 class MenuItemBase(BaseModel):
     name: str
     price: float
