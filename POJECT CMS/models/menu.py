@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Numeric
 from database import Base
-
+# from dto.menu_dto import MenuItemCreate, MenuItemOut
 class MenuItem(Base):
     __tablename__ = "menu_items"
 
