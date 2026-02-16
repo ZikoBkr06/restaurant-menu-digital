@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Menu - Restaurant</title>
+    <link rel="stylesheet" href="menu.css">
+    <style>
+        .admin-container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 16px #0001; padding: 32px; }
+        .admin-title { font-size: 2rem; margin-bottom: 24px; color: #d4af37; }
+        .admin-form input, .admin-form textarea { width: 100%; margin-bottom: 12px; padding: 8px; border-radius: 6px; border: 1px solid #ccc; }
+        .admin-form button { background: #d4af37; color: #222; border: none; padding: 10px 24px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .admin-list { margin-top: 32px; }
+        .admin-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+        .admin-item:last-child { border-bottom: none; }
+        .admin-item-name { font-weight: 600; }
+        .admin-item-actions button { background: #c41e3a; color: #fff; border: none; border-radius: 4px; padding: 4px 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h1 class="admin-title">Gestion du Menu</h1>
+        <form class="admin-form" id="addForm">
+            <input type="text" id="name" placeholder="Nom du plat" required />
+            <input type="number" id="price" placeholder="Prix (€)" step="0.01" required />
+            <input type="text" id="image_url" placeholder="URL de l'image (optionnel)" />
+            <textarea id="description" placeholder="Description"></textarea>
+            <button type="submit">Ajouter</button>
+        </form>
+        <div class="admin-list" id="menuList"></div>
+    </div>
+    <script>
+    async function fetchMenu() {
+        const res = await fetch('/menu/');
+        return res.ok ? res.json() : [];
+    }
+    async function renderMenu() {
+        const list = document.getElementById('menuList');
+        list.innerHTML = '<em>Chargement...</em>';
+        const items = await fetchMenu();
+        if (!items.length) { list.innerHTML = '<em>Aucun plat.</em>'; return; }
+        list.innerHTML = items.map(item => `
+            <div class="admin-item">
+                <span class="admin-item-name">${item.name} <small>(${item.price}€)</small></span>
+                <div class="admin-item-actions">
+                    <button onclick="deleteItem(${item.id})">Supprimer</button>
+                </div>
+            </div>
+        `).join('');
+    }
+    async function addItem(e) {
+        e.preventDefault();
+        const data = {
+            name: document.getElementById('name').value,
+            price: parseFloat(document.getElementById('price').value),
+            image_url: document.getElementById('image_url').value,
+            description: document.getElementById('description').value
+        };
+        await fetch('/menu/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        e.target.reset();
+        renderMenu();
+    }
+    async function deleteItem(id) {
+        if (!confirm('Supprimer ce plat ?')) return;
+        await fetch(`/menu/${id}`, { method: 'DELETE' });
+        renderMenu();
+    }
+    document.getElementById('addForm').addEventListener('submit', addItem);
+    window.deleteItem = deleteItem;
+    renderMenu();
+    </script>
+</body>
+</html>

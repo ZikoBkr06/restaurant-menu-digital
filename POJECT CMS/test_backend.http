@@ -1,0 +1,71 @@
+
+############################################
+### 🔹 TESTS POUR MENU (menu_items)
+############################################
+
+### ➤ GET tous les plats
+GET http://localhost:8000/menu
+
+
+### ➤ POST Pizza Margherita
+POST http://localhost:8000/menu
+Content-Type: application/json
+
+{
+  "name": "Pizza Margherita",
+  "price": 45.0,
+  "description": "Classique italienne",
+  "image_url": "https://exemple.com/pizza.jpg"
+}
+
+### ➤ POST Coca Cola
+POST http://localhost:8000/menu
+Content-Type: application/json
+
+{
+  "name": "Coca cola",
+  "price": 15.0,
+  "description": "Coke",
+  "image_url": "https://exemple.com/coca.jpg"
+}
+
+
+
+### ➤ DELETE un plat par ID
+DELETE http://localhost:8000/menu/3
+
+
+
+############################################
+### 🔹 TESTS POUR EMPLOYES (employees)
+############################################
+
+### ➤ GET tous les employés
+GET http://localhost:8000/employees
+
+
+### ➤ POST Sami Chef
+POST http://localhost:8000/employees
+Content-Type: application/json
+
+{
+  "full_name": "Sami Chef",
+  "role": "Chef",
+  "phone": "0600000000",
+  "email": "sami@restaurant.com"
+}
+
+### ➤ POST Chef2
+POST http://localhost:8000/employees
+Content-Type: application/json
+
+{
+  "full_name": "chef",
+  "role": "Chef",
+  "phone": "0660000000",
+  "email": "chef2@restaurant.com"
+}
+
+
+### ➤ DELETE un employé par ID
+DELETE http://localhost:8000/employees/16

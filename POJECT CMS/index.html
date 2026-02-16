@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Stocks - Restaurant</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- En-tête avec bannière -->
+    <header>
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">🍽️</div>
+                <h1>Gestion de Stocks Restaurant</h1>
+            </div>
+            <div class="header-stats">
+                <div class="stat-card stat-expense">
+                    <span class="stat-label">💰 Total Dépensé</span>
+                    <span class="stat-value" id="totalExpenses">0,00 €</span>
+                </div>
+                <div class="stat-card stat-revenue">
+                    <span class="stat-label">💵 Total Récupéré</span>
+                    <span class="stat-value" id="totalRevenue">0,00 €</span>
+                </div>
+                <div class="stat-card stat-stock">
+                    <span class="stat-label">📦 Valeur Stock Actuel</span>
+                    <span class="stat-value" id="totalStockValue">0,00 €</span>
+                </div>
+                <div class="stat-card stat-balance">
+                    <span class="stat-label">⚖️ Solde</span>
+                    <span class="stat-value" id="balance">0,00 €</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenu principal -->
+    <main class="container">
+        <!-- Section : Formulaire d'entrée de produits -->
+        <section class="card">
+            <h2>📥 Produits Entrants (Achats)</h2>
+            <p class="form-info">💡 <strong>Note :</strong> Lorsque vous achetez des produits, vous dépensez de l'argent. Cette dépense sera ajoutée au "Total Dépensé" et augmentera la "Valeur Stock Actuel".</p>
+            <form id="entryForm" class="form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="entryProductName">Nom du produit *</label>
+                        <input type="text" id="entryProductName" required placeholder="Ex: Tomates, Riz, Huile...">
+                    </div>
+                    <div class="form-group">
+                        <label for="entryCategory">Catégorie *</label>
+                        <select id="entryCategory" required>
+                            <option value="">Sélectionner...</option>
+                            <option value="Légumes">Légumes</option>
+                            <option value="Fruits">Fruits</option>
+                            <option value="Viandes">Viandes</option>
+                            <option value="Poissons">Poissons</option>
+                            <option value="Épicerie">Épicerie</option>
+                            <option value="Boissons">Boissons</option>
+                            <option value="Produits laitiers">Produits laitiers</option>
+                            <option value="Autres">Autres</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="entryQuantity">Quantité *</label>
+                        <input type="number" id="entryQuantity" required min="0.01" step="0.01" placeholder="Ex: 10">
+                    </div>
+                    <div class="form-group">
+                        <label for="entryUnitPrice">Prix unitaire (€) *</label>
+                        <input type="number" id="entryUnitPrice" required min="0" step="0.01" placeholder="Ex: 2.50">
+                    </div>
+                    <div class="form-group">
+                        <label for="entryDate">Date d'entrée *</label>
+                        <input type="date" id="entryDate" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Ajouter l'entrée</button>
+                    <button type="reset" class="btn btn-secondary">Réinitialiser</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Section : Formulaire de sortie de produits -->
+        <section class="card">
+            <h2>📤 Produits Sortants (Ventes/Consommation)</h2>
+            <p class="form-info">💡 <strong>Note :</strong> Lorsque vous vendez ou consommez des produits, vous récupérez de l'argent. Cette recette sera ajoutée au "Total Récupéré" et diminuera la "Valeur Stock Actuel".</p>
+            <form id="exitForm" class="form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exitProductName">Nom du produit *</label>
+                        <select id="exitProductName" required>
+                            <option value="">Sélectionner un produit...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="exitQuantity">Quantité consommée *</label>
+                        <input type="number" id="exitQuantity" required min="0.01" step="0.01" placeholder="Ex: 5">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exitDate">Date de sortie *</label>
+                        <input type="date" id="exitDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exitUnitPrice">Prix unitaire (€) *</label>
+                        <input type="number" id="exitUnitPrice" required min="0" step="0.01" placeholder="Ex: 2.50">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-danger">Enregistrer la sortie</button>
+                    <button type="reset" class="btn btn-secondary">Réinitialiser</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Section : Tableau du stock actuel -->
+        <section class="card">
+            <div class="section-header">
+                <h2>📊 Stock Actuel</h2>
+                <button id="clearAllBtn" class="btn btn-warning">Effacer toutes les données</button>
+            </div>
+            <div class="table-container">
+                <table id="stockTable">
+                    <thead>
+                        <tr>
+                            <th>Nom du produit</th>
+                            <th>Catégorie</th>
+                            <th>Quantité restante</th>
+                            <th>Prix unitaire moyen</th>
+                            <th>Valeur du stock</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stockTableBody">
+                        <!-- Le contenu sera généré dynamiquement par JavaScript -->
+                    </tbody>
+                </table>
+                <div id="emptyStockMessage" class="empty-message">
+                    <p>📦 Aucun produit en stock. Ajoutez des produits entrants pour commencer.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section : Historique des mouvements -->
+        <section class="card">
+            <h2>📋 Historique des Mouvements</h2>
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="entries">Entrées</button>
+                <button class="tab-btn" data-tab="exits">Sorties</button>
+            </div>
+            <div class="tab-content">
+                <div id="entriesTab" class="tab-pane active">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Produit</th>
+                                    <th>Catégorie</th>
+                                    <th>Quantité</th>
+                                    <th>Prix unitaire</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="entriesTableBody">
+                                <!-- Le contenu sera généré dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="exitsTab" class="tab-pane">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Produit</th>
+                                    <th>Quantité</th>
+                                    <th>Prix unitaire</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="exitsTableBody">
+                                <!-- Le contenu sera généré dynamiquement -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Gestion de Stocks Restaurant - Application de gestion professionnelle</p>
+    </footer>
+
+    <!-- Script JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
+
